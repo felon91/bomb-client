@@ -1,0 +1,15 @@
+# ide
+.idea/
+.vscode/
+
+# npm
+node_modules/
+package.json
+package-lock.json
+
+.next
+
+next-env.d.ts
+next-env.overridden.d.ts
+
+lint-staged.config.js
