@@ -7,7 +7,6 @@ import type {
 } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { PropsWithChildren } from 'react';
-import { toast } from 'react-toastify';
 
 interface FormProps<TFormValues extends FieldValues> {
   defaultValues?: DefaultValues<TFormValues>;
@@ -38,11 +37,7 @@ export const Form = <TFormValues extends FieldValues>({
   });
 
   const handleSubmitForm = methods.handleSubmit(async (data, event) => {
-    const result = await onSubmit(data, event);
-
-    if (result === false && showNotifyOnError) {
-      toast.error('Произошла ошибка, попробуйте еще раз');
-    }
+    await onSubmit(data, event);
   });
 
   return (

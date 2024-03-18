@@ -4,19 +4,16 @@ import {
   FormOrderTitle,
   FormOrderWrapper,
 } from '@/modules/cart/components/form-order/form-order.syled';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { Form } from '@/shared/components/form/form';
 import { FormInput } from '@/modules/cart/components/form-input/form-input';
 import { FormTextArea } from '@/modules/cart/components/form-textarea/form-text-area';
 import { useSendOrderMutation } from '@/shared/services/order/order';
-import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
+import { useAppSelector } from '@/shared/store/hooks';
 import type { IOrderProduct, CartProduct } from '@/shared/services/order/models';
-import { toast } from 'react-toastify';
-import { clearCart } from '@/shared/store/reducers/cart-slice';
 
 export const FormOrderWrap: FC = () => {
   const products = useAppSelector(state => state.cart.productsInCart) || {};
-  const dispatch = useAppDispatch();
 
   const productsList: CartProduct[] = Object.values(products).map(({ title, count, price }) => ({
     orderName: title,
@@ -28,7 +25,7 @@ export const FormOrderWrap: FC = () => {
 
   const [
     sendOrderMutation, // This is the mutation trigger
-    { isLoading, isSuccess, isError }, // You can use the `isLoading` flag, or do custom logic with `status`
+    { isLoading }, // You can use the `isLoading` flag, or do custom logic with `status`
   ] = useSendOrderMutation();
 
   const handleSubmit = async (data: Omit<IOrderProduct, 'products' | 'fullPrice'>) => {
@@ -40,20 +37,6 @@ export const FormOrderWrap: FC = () => {
 
     await sendOrderMutation(result);
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success(
-        'Благодарим, Ваш заказ был успешно отправлен, мы свяжемся с Вами в ближайшее время.'
-      );
-      dispatch(clearCart());
-    }
-    if (isError) {
-      toast.error(
-        'Упс, произошла ошибка, попробуйте еще раз или позвоните по телефону: +375(33)355-34-93, +375(29)130-63-12'
-      );
-    }
-  }, [dispatch, isError, isSuccess]);
 
   return (
     <Form onSubmit={handleSubmit}>
